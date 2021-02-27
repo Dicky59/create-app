@@ -1,3 +1,4 @@
+
 require('dotenv').config()
 require('module-alias/register')
 const chokidar = require('chokidar')
@@ -59,5 +60,6 @@ if (!inProduction) {
 }
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`Started on port ${PORT}`)
 })
