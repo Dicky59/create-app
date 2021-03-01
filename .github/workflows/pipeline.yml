@@ -31,14 +31,4 @@ jobs:
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           healthcheck: https://create-app-master.herokuapp.com/health
           checkstring: ok
-<<<<<<< HEAD
           rollbackonhealthcheckfailed: true
-      - uses: actions/checkout@v2
-      - name: Bump version and push tag
-        if: ${{ github.event_name == 'push' }}
-        uses: anothrNick/github-tag-action@1.33.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-=======
-          rollbackonhealthcheckfailed: true
->>>>>>> 1def82c9fe540aaeacdc8aef06cd1ecafbd03df3
