@@ -63,3 +63,7 @@ app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`Started on port ${PORT}`)
 })
+
+app.get('/health', (_req, res) => {
+  res.send('ok')
+})
