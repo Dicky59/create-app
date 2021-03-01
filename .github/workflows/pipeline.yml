@@ -41,3 +41,28 @@ jobs:
           DEFAULT_BUMP: patch
           INITIAL_VERSION: 1.0.0
           WITH_V: true
+      - name: Send a build failure notification to Slack
+        uses: 8398a7/action-slack@v3
+        if: ${{ failure() }}
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Send a deployment notification to Slack
+        uses: 8398a7/action-slack@v3
+        if: ${{ success() && github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+        with:
+          status: custom
+          fields: commit,author,took
+          custom_payload: |
+            {
+              username: 'github-action',
+              icon_emoji: ':59:',
+              attachments: [{
+                color: 'good',
+                text: `a new version deployed to https://dicky-pokemon-app.herokuapp.com/ (${process.env.AS_COMMIT}) by ${process.env.AS_AUTHOR} build took ${process.env.AS_TOOK}`,
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
