@@ -5,7 +5,7 @@ on:
     branches:
       - main
   pull_request:
-    branches: [master]
+    branches: [main]
     types: [opened, synchronize]
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
       - name: build
         run: npm run build
       - name: deploy
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
         uses: akhileshns/heroku-deploy@v3.7.8 
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
@@ -34,7 +34,7 @@ jobs:
           rollbackonhealthcheckfailed: true
         uses: actions/checkout@v2
       - name: Bump version and push tag
-          if: ${{ github.event_name == 'push' }} && ${{ !contains(github.event.head_commit.message, '#skip')) }} && ${{ success() }}
+          if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
           uses: anothrNick/github-tag-action@1.33.0
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
